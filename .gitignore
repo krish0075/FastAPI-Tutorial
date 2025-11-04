@@ -1,0 +1,117 @@
+# ----------------------------------------
+# Python general
+# ----------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+*.pyd
+
+# ----------------------------------------
+# Environment & Dependencies
+# ----------------------------------------
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Poetry / Pipenv
+.poetry/
+Pipfile.lock
+poetry.lock
+
+# ----------------------------------------
+# IDE & Editor settings
+# ----------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ----------------------------------------
+# OS generated files
+# ----------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ----------------------------------------
+# Build / Packaging
+# ----------------------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# ----------------------------------------
+# Logs and debug
+# ----------------------------------------
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+coverage/
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.pytest_cache/
+.coverage
+.cache/
+
+# ----------------------------------------
+# FastAPI specific
+# ----------------------------------------
+# Uvicorn / Gunicorn logs
+*.db
+*.sqlite3
+*.pid
+
+# ----------------------------------------
+# Jinja2 Templates
+# ----------------------------------------
+# Keep templates, ignore compiled or cache files
+**/__pycache__/
+**/*.jinja2~
+**/*.jinja~
+*.jinja2c
+*.jinjac
+# (if you ever generate compiled template cache)
+jinja_cache/
+
+# ----------------------------------------
+# Redis
+# ----------------------------------------
+# Redis doesn’t create source files — but you might persist data locally
+*.rdb
+*.aof
+dump.rdb
+appendonly.aof
+
+# ----------------------------------------
+# Static files (optional)
+# ----------------------------------------
+staticfiles/
+static/
+media/
+uploads/
+
+# ----------------------------------------
+# Testing & Reports
+# ----------------------------------------
+test-results/
+pytestdebug.log
+*.cover
+*.coverage
+*.cov
