@@ -1,8 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status, HTTPException, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy import Column, Integer, String
+from database import SessionLocal, engine, Base
 from contextlib import asynccontextmanager
 from redis import Redis
 import httpx
 import json
+
+
+# Create Table model
+class User(Base):
+    __tablename__ = "user"
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    email = Column(String)
+
+Base.metadata.create_all(engine)
 
 
 @asynccontextmanager
@@ -14,6 +27,26 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@app.post("/users")
+def add_user(name: str, email: str, db: Session = Depends(get_db)):
+    user = User(name=name, email=email)
+    db.add(user)
+    db.commit()
+
+
+@app.get("/users")
+def read_users(db: Session = Depends(get_db)):
+    return db.query(User).all()
+
 
 @app.get("/entries")
 async def read_entries():
