@@ -6,16 +6,8 @@ from contextlib import asynccontextmanager
 from redis import Redis
 import httpx
 import json
-
-
-# Create Table model
-class User(Base):
-    __tablename__ = "user"
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    email = Column(String)
-
-Base.metadata.create_all(engine)
+import uuid
+from pydantic import UUID4, BaseModel, Field, EmailStr
 
 
 @asynccontextmanager
@@ -34,6 +26,33 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+# Create Table model
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    email = Column(String)
+
+Base.metadata.create_all(engine)
+
+
+class CreateUser(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=12)
+    age: int = Field(gt=21)
+
+
+class UserModel(CreateUser):
+    id: UUID4 = Field(default_factory=uuid.uuid4)
+
+
+@app.post("/user")
+def fetch_user(user: CreateUser):
+    user = UserModel(email=user.email, password=user.password, age=user.age)
+    return user
 
 
 @app.post("/users")
@@ -57,5 +76,3 @@ async def read_entries():
         data_str = json.dumps(value)
         app.state.redis.set("entries", data_str)
     return json.loads(value)
-
-
