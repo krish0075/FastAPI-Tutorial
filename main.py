@@ -1,13 +1,18 @@
 from fastapi import FastAPI, status, HTTPException, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import Column, Integer, String
+from typing import Annotated
 from database import SessionLocal, engine, Base
 from contextlib import asynccontextmanager
 from redis import Redis
 import httpx
 import json
 import uuid
+import models
 from pydantic import UUID4, BaseModel, Field, EmailStr
+from database import SessionLocal, engine
+import auth
+from models import User, Users
 
 
 @asynccontextmanager
@@ -19,6 +24,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(auth.router)
 
 def get_db():
     db = SessionLocal()
@@ -28,15 +34,9 @@ def get_db():
         db.close()
 
 
-# Create Table model
-class User(Base):
-    __tablename__ = "user"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    email = Column(String)
-
 Base.metadata.create_all(engine)
+
+db_dependency =Annotated[Session, Depends(get_db)]
 
 
 class CreateUser(BaseModel):
